@@ -13,4 +13,4 @@ run:
 
 test:
 	@echo "  >  Testing binary..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go test src/main/main.go
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) cd src/main/services  && go test
