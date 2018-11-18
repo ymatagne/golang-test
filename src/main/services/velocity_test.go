@@ -4,6 +4,8 @@ import (
 	"strconv"
 	"testing"
 	"time"
+
+	"../models"
 )
 
 func TestReturnTrueIfIsTheNewDay(t *testing.T) {
@@ -42,5 +44,49 @@ func TestReturnFalseIfIsNotANeWeek(t *testing.T) {
 	var isNewWeek = IsNewWeek(currentWeek, nextWeek)
 	if isNewWeek == false {
 		t.Errorf("Expected isNewWeek of true, but it was %s instead.", strconv.FormatBool(isNewWeek))
+	}
+}
+
+func TestReturnTrueIfTheEventCanBeLoadOnTheAccount(t *testing.T) {
+
+	var account = models.Account{LoadID: "1", MaxPerDay: 0, MaxPerWeek: 0, NumberPerDay: 0, History: make(map[string]bool)}
+	var amount = 10.0
+
+	var canBeLoaded = CanBeLoaded(account, amount)
+	if canBeLoaded == false {
+		t.Errorf("Expected isNewWeek of true, but it was %s instead.", strconv.FormatBool(canBeLoaded))
+	}
+}
+
+func TestReturnFalseIfTheEventCannotBeLoadOnTheAccount(t *testing.T) {
+
+	var account = models.Account{LoadID: "1", MaxPerDay: 0, MaxPerWeek: 0, NumberPerDay: 0, History: make(map[string]bool)}
+	var amount = 10000.0
+
+	var canBeLoaded = CanBeLoaded(account, amount)
+	if canBeLoaded == true {
+		t.Errorf("Expected isNewWeek of true, but it was %s instead.", strconv.FormatBool(canBeLoaded))
+	}
+}
+
+func TestReturnFalseIfTheEventCannotBeLoadOnTheAccountBecauseMaxOfWeek(t *testing.T) {
+
+	var account = models.Account{LoadID: "1", MaxPerDay: 0, MaxPerWeek: 20000, NumberPerDay: 0, History: make(map[string]bool)}
+	var amount = 1000.0
+
+	var canBeLoaded = CanBeLoaded(account, amount)
+	if canBeLoaded == true {
+		t.Errorf("Expected isNewWeek of true, but it was %s instead.", strconv.FormatBool(canBeLoaded))
+	}
+}
+
+func TestReturnFalseIfTheEventCannotBeLoadOnTheAccountBecauseNumberOfLoaded(t *testing.T) {
+
+	var account = models.Account{LoadID: "1", MaxPerDay: 0, MaxPerWeek: 10000, NumberPerDay: 4, History: make(map[string]bool)}
+	var amount = 1000.0
+
+	var canBeLoaded = CanBeLoaded(account, amount)
+	if canBeLoaded == true {
+		t.Errorf("Expected isNewWeek of true, but it was %s instead.", strconv.FormatBool(canBeLoaded))
 	}
 }
